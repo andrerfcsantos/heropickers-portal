@@ -101,10 +101,11 @@ only by the new page get dropped from the CSS.
 
 ## Assets
 
-`public/imgs/` holds copies of the two game logos taken from the picker repos,
-plus the Buy Me a Coffee and Discord marks. They are copies on purpose, so this
-repo has no build-time dependency on its siblings. If a logo changes upstream,
-re-copy it by hand.
+`public/imgs/` holds the two picker logos (resized from the masters in each picker
+repo's `images/logo/`), plus the Buy Me a Coffee and Discord marks. They are
+copies on purpose, so this repo has no build-time dependency on its siblings. If
+a logo changes upstream, re-export it by hand and re-run `npm run generate-og`,
+which draws the same files onto the social card.
 
 Hero and agent icons are deliberately not here: a page whose only job is to send
 people to one of two links does not need a roster of portraits, and they were
