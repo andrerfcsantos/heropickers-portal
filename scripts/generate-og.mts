@@ -24,6 +24,9 @@ const HEIGHT = 630;
 
 const SANS = "Inter, DejaVu Sans, Liberation Sans, Arial, sans-serif";
 
+/** Left edge of the Valorant group (accent bar, logo, label) on the card. */
+const VAL_GROUP_LEFT = 580;
+
 const background = `
 <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
   <defs>
@@ -60,52 +63,55 @@ const background = `
   </text>
 
   <rect x="80" y="512" width="14" height="44" rx="4" fill="${OW}"/>
-  <rect x="530" y="512" width="14" height="44" rx="4" fill="${VAL}"/>
+  <rect x="${VAL_GROUP_LEFT}" y="512" width="14" height="44" rx="4" fill="${VAL}"/>
   <line x1="80" y1="586" x2="1120" y2="586" stroke="#262d3d" stroke-width="2"/>
   <text x="80" y="618" font-family="${SANS}" font-size="22" fill="#6b7488">
     heropickers.com
   </text>
 </svg>`;
 
-/** Labels sit next to each logo, so they are drawn with the logos on top. */
-const labels = `
+const LOGO_HEIGHT = 56;
+const LOGO_TOP = 506;
+const OW_LOGO_LEFT = 112;
+const VAL_LOGO_LEFT = VAL_GROUP_LEFT + 32;
+const LABEL_GAP = 18;
+
+/** Labels sit next to each logo, so their x depends on the logo's width. */
+function labels(owLabelX: number, valLabelX: number): string {
+  return `
 <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
-  <text x="176" y="544" font-family="${SANS}" font-size="30" font-weight="600" fill="#e7ebf3">
+  <text x="${owLabelX}" y="544" font-family="${SANS}" font-size="30" font-weight="600" fill="#e7ebf3">
     owheropicker.com
   </text>
-  <text x="626" y="544" font-family="${SANS}" font-size="30" font-weight="600" fill="#e7ebf3">
+  <text x="${valLabelX}" y="544" font-family="${SANS}" font-size="30" font-weight="600" fill="#e7ebf3">
     valorantpicker.com
   </text>
 </svg>`;
+}
+
+/** Scales a picker logo to LOGO_HEIGHT, keeping its aspect ratio. */
+async function loadLogo(
+  ...segments: string[]
+): Promise<{ input: Buffer; width: number }> {
+  const { data, info } = await sharp(path.join(PUBLIC_DIR, ...segments))
+    .resize({ height: LOGO_HEIGHT })
+    .png()
+    .toBuffer({ resolveWithObject: true });
+  return { input: data, width: info.width };
+}
 
 async function generateSocialCard(): Promise<void> {
-  const owLogo = await sharp(
-    path.join(PUBLIC_DIR, "imgs", "overwatch", "logo.svg"),
-    { density: 300 },
-  )
-    .resize(52, 52, {
-      fit: "contain",
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
-    .png()
-    .toBuffer();
+  const owLogo = await loadLogo("imgs", "overwatch", "hero-picker-logo.webp");
+  const valLogo = await loadLogo("imgs", "valorant", "agent-picker-logo.webp");
 
-  const valLogo = await sharp(
-    path.join(PUBLIC_DIR, "imgs", "valorant", "logo.webp"),
-  )
-    .resize({
-      height: 40,
-      fit: "contain",
-      background: { r: 0, g: 0, b: 0, alpha: 0 },
-    })
-    .png()
-    .toBuffer();
+  const owLabelX = OW_LOGO_LEFT + owLogo.width + LABEL_GAP;
+  const valLabelX = VAL_LOGO_LEFT + valLogo.width + LABEL_GAP;
 
   await sharp(Buffer.from(background))
     .composite([
-      { input: Buffer.from(labels), top: 0, left: 0 },
-      { input: owLogo, top: 508, left: 112 },
-      { input: valLogo, top: 514, left: 562 },
+      { input: Buffer.from(labels(owLabelX, valLabelX)), top: 0, left: 0 },
+      { input: owLogo.input, top: LOGO_TOP, left: OW_LOGO_LEFT },
+      { input: valLogo.input, top: LOGO_TOP, left: VAL_LOGO_LEFT },
     ])
     .png()
     .toFile(path.join(PUBLIC_DIR, "og.png"));
