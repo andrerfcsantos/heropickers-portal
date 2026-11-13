@@ -5,33 +5,55 @@
 @source "../index.html";
 @source "../404.html";
 
-@theme {
-  /* Portal palette. Deliberately neutral and dark so the two game accents
-     below are the only saturated colour on the page. */
-  --color-ink: #0b0d12;
-  --color-surface: #141821;
-  --color-surface-2: #1b2130;
-  --color-line: #262d3d;
-  --color-muted: #97a1b8;
+/* Latin-only subsets of two variable fonts (SIL OFL, see fonts/OFL.txt).
+   Referenced from here so Vite fingerprints them into /assets. */
+@font-face {
+  font-family: "Sofia Sans";
+  src: url("./fonts/sofia-sans-latin-wght-normal.woff2") format("woff2");
+  font-weight: 1 1000;
+  font-style: normal;
+  font-display: swap;
+}
 
-  /* Pulled from each picker so a card reads as that game before the text
-     is: Overwatch's orange, Valorant's red. */
+@font-face {
+  font-family: "Sofia Sans Extra Condensed";
+  src: url("./fonts/sofia-sans-extra-condensed-latin-wght-normal.woff2")
+    format("woff2");
+  font-weight: 1 1000;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  /* The slate family both pickers are built on, so the portal reads as the
+     same set of sites. Every colour is flat: no gradients anywhere. */
+  --color-page: #2c3e50;
+  --color-deep: #212f3d;
+  --color-tile: #3b5169;
+  --color-muted: #c2ccd7;
+
+  /* Each game's accent, used for underlines and markers only. The Valorant
+     red does not reach text contrast on the tile, so neither is used as a
+     text colour. */
   --color-ow: #f89e4a;
   --color-val: #ff4655;
 
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  --font-sans: "Sofia Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display:
+    "Sofia Sans Extra Condensed", "Arial Narrow", ui-sans-serif, sans-serif;
 }
 
 @layer base {
   html {
-    background-color: var(--color-ink);
+    background-color: var(--color-deep);
   }
 
+  /* The html background is the footer's darker slate, so a short page (the
+     404) must still fill the viewport with the page colour. */
   body {
-    background-color: var(--color-ink);
-    color: #e7ebf3;
+    min-height: 100dvh;
+    background-color: var(--color-page);
+    color: #fff;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
@@ -41,9 +63,62 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-ow);
+    outline: 3px solid #fff;
     outline-offset: 3px;
-    border-radius: 2px;
+  }
+}
+
+@layer components {
+  /* Every link that is not a picker (Discord, GitHub, Buy me a coffee) looks
+     the same: an icon and underlined text. */
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+  }
+
+  .link:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .link svg {
+    width: 1.15em;
+    height: 1.15em;
+    flex: none;
+    fill: currentColor;
+  }
+
+  /* A picker: the name as a heading and its domain underneath, one link. */
+  .pick-domain {
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.2em;
+  }
+
+  .pick:hover .pick-domain {
+    text-decoration-thickness: 5px;
+  }
+
+  /* Square markers in the game's accent, like the role icons in the pickers
+     rather than a typographic bullet. */
+  .feats li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+
+  .feats li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 0.45rem;
+    height: 0.45rem;
+    background: var(--accent);
   }
 }
 
@@ -55,14 +130,4 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-@utility wordmark {
-  background-image: linear-gradient(
-    100deg,
-    var(--color-ow) 0%,
-    var(--color-val) 100%
-  );
-  background-clip: text;
-  color: transparent;
 }

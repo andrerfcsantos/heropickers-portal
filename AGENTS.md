@@ -86,7 +86,7 @@ here — no picker logic, no shared components with either site.
 Unlike the two picker repos, this one has no framework: it is plain HTML and
 Tailwind CSS, built by Vite itself. That means `vp build` really is the build
 (in the pickers it is `next build`), and the whole site is `index.html`,
-`404.html` and `src/style.css`.
+`404.html`, `src/style.css` and the two fonts in `src/fonts/`.
 
 There is no JavaScript, deliberately — both HTML entries link `src/style.css`
 directly, so the build emits a stylesheet and no bundle. Adding a script means
@@ -102,10 +102,24 @@ only by the new page get dropped from the CSS.
 ## Assets
 
 `public/imgs/` holds the two picker logos (resized from the masters in each picker
-repo's `images/logo/`), plus the Buy Me a Coffee and Discord marks. They are
-copies on purpose, so this repo has no build-time dependency on its siblings. If
+repo's `images/logo/`). They are copies on purpose, so this repo has no build-time dependency on its siblings. If
 a logo changes upstream, re-export it by hand and re-run `npm run generate-og`,
 which draws the same files onto the social card.
+
+The Discord, GitHub and coffee icons are inline SVG symbols at the top of
+`index.html`, filled with `currentColor`, so they always match the link text.
+Every secondary link (Discord, GitHub, Buy me a coffee) uses the same `.link`
+style; keep new ones consistent with it rather than turning one into a button.
+
+`src/fonts/` holds latin-only subsets of Sofia Sans and Sofia Sans Extra
+Condensed (SIL OFL, licence alongside). They are referenced from
+`src/style.css` so Vite fingerprints them, and the headline face is preloaded
+from both HTML entries — keep that `href` pointing at the same file.
+
+The design is flat on purpose: no gradients, glows or gradient text. Colours
+are the slate tokens in `src/style.css`, and the two game accents are used for
+underlines and markers only, because the Valorant red does not reach text
+contrast on the tiles.
 
 Hero and agent icons are deliberately not here: a page whose only job is to send
 people to one of two links does not need a roster of portraits, and they were
@@ -119,7 +133,8 @@ npm run generate-og
 
 Re-run it only when the branding or the wording on the social card changes, and
 look at the result — the card draws its text with whatever fonts the machine
-running it has installed.
+running it has installed. It cannot use the page's fonts: sharp's bundled
+renderer does not read WOFF2.
 
 # Dependencies
 
