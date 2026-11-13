@@ -54,8 +54,9 @@ miss (the bundled Cloudflare config already does).
 | ------------------------- | ------------------------------------------------------------- |
 | `index.html`              | The landing page itself                                       |
 | `404.html`                | Not-found page                                                |
-| `src/style.css`           | Tailwind entry plus the theme tokens and the wordmark utility |
-| `public/imgs/`            | Game, Buy Me a Coffee and Discord logos                       |
+| `src/style.css`           | Tailwind entry plus the fonts, theme tokens and link styles   |
+| `src/fonts/`              | Self-hosted Sofia Sans fonts (SIL OFL)                        |
+| `public/imgs/`            | The two picker logos                                          |
 | `scripts/generate-og.mts` | Regenerates the committed `og.png` and `apple-touch-icon.png` |
 
 Both HTML files are registered in `vite.config.ts` under

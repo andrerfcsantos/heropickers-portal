@@ -17,7 +17,11 @@ const PUBLIC_DIR = path.join(ROOT, "public");
 
 const OW = "#f89e4a";
 const VAL = "#ff4655";
-const INK = "#0b0d12";
+// The portal's slate palette (src/style.css). Every colour is flat.
+const PAGE = "#2c3e50";
+const DEEP = "#212f3d";
+const TEXT = "#ffffff";
+const MUTED = "#c2ccd7";
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -29,43 +33,26 @@ const VAL_GROUP_LEFT = 580;
 
 const background = `
 <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
-  <defs>
-    <linearGradient id="wordmark" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="${OW}"/>
-      <stop offset="1" stop-color="${VAL}"/>
-    </linearGradient>
-    <radialGradient id="glowLeft" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="${OW}" stop-opacity="0.30"/>
-      <stop offset="1" stop-color="${OW}" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glowRight" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="${VAL}" stop-opacity="0.30"/>
-      <stop offset="1" stop-color="${VAL}" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-
-  <rect width="${WIDTH}" height="${HEIGHT}" fill="${INK}"/>
-  <ellipse cx="240" cy="120" rx="520" ry="380" fill="url(#glowLeft)"/>
-  <ellipse cx="980" cy="140" rx="520" ry="380" fill="url(#glowRight)"/>
+  <rect width="${WIDTH}" height="${HEIGHT}" fill="${PAGE}"/>
+  <rect y="480" width="${WIDTH}" height="${HEIGHT - 480}" fill="${DEEP}"/>
 
   <text x="80" y="250" font-family="${SANS}" font-size="86" font-weight="800"
-        letter-spacing="-1" fill="url(#wordmark)">HERO PICKERS</text>
+        letter-spacing="-1" fill="${TEXT}">HERO PICKERS</text>
 
-  <text x="80" y="330" font-family="${SANS}" font-size="40" font-weight="600" fill="#e7ebf3">
+  <text x="80" y="330" font-family="${SANS}" font-size="40" font-weight="600" fill="${TEXT}">
     Can&#8217;t decide who to play?
   </text>
 
-  <text x="80" y="392" font-family="${SANS}" font-size="29" fill="#97a1b8">
+  <text x="80" y="392" font-family="${SANS}" font-size="29" fill="${MUTED}">
     Random hero and agent pickers for Overwatch and Valorant.
   </text>
-  <text x="80" y="436" font-family="${SANS}" font-size="29" fill="#97a1b8">
+  <text x="80" y="436" font-family="${SANS}" font-size="29" fill="${MUTED}">
     Filter to what you actually play, then roll. Free, no ads.
   </text>
 
-  <rect x="80" y="512" width="14" height="44" rx="4" fill="${OW}"/>
-  <rect x="${VAL_GROUP_LEFT}" y="512" width="14" height="44" rx="4" fill="${VAL}"/>
-  <line x1="80" y1="586" x2="1120" y2="586" stroke="#262d3d" stroke-width="2"/>
-  <text x="80" y="618" font-family="${SANS}" font-size="22" fill="#6b7488">
+  <rect x="80" y="512" width="14" height="44" fill="${OW}"/>
+  <rect x="${VAL_GROUP_LEFT}" y="512" width="14" height="44" fill="${VAL}"/>
+  <text x="80" y="612" font-family="${SANS}" font-size="22" fill="${MUTED}">
     heropickers.com
   </text>
 </svg>`;
@@ -80,10 +67,10 @@ const LABEL_GAP = 18;
 function labels(owLabelX: number, valLabelX: number): string {
   return `
 <svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}">
-  <text x="${owLabelX}" y="544" font-family="${SANS}" font-size="30" font-weight="600" fill="#e7ebf3">
+  <text x="${owLabelX}" y="544" font-family="${SANS}" font-size="30" font-weight="600" fill="${TEXT}">
     owheropicker.com
   </text>
-  <text x="${valLabelX}" y="544" font-family="${SANS}" font-size="30" font-weight="600" fill="#e7ebf3">
+  <text x="${valLabelX}" y="544" font-family="${SANS}" font-size="30" font-weight="600" fill="${TEXT}">
     valorantpicker.com
   </text>
 </svg>`;
@@ -124,7 +111,7 @@ async function generateTouchIcon(): Promise<void> {
   // of the source mark are flattened against the page background instead.
   await sharp(favicon, { density: 600 })
     .resize(180, 180)
-    .flatten({ background: INK })
+    .flatten({ background: DEEP })
     .png()
     .toFile(path.join(PUBLIC_DIR, "apple-touch-icon.png"));
 }
