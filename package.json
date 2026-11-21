@@ -15,8 +15,7 @@
     "upload": "vp build && wrangler versions upload",
     "deploy:preview": "vp build && wrangler preview",
     "deps:check": "node scripts/deps.mts",
-    "deps:update": "vp update && node scripts/deps.mts",
-    "deps:update:major": "vp update --latest --interactive && node scripts/deps.mts"
+    "deps:update": "vp update && node scripts/deps.mts"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.0",
