@@ -15,8 +15,7 @@
     "upload": "vp build && wrangler versions upload",
     "deploy:preview": "vp build && wrangler preview",
     "deps:check": "node scripts/deps.mts",
-    "deps:update": "vp update && node scripts/deps.mts",
-    "deps:update:major": "vp update --latest --interactive && node scripts/deps.mts"
+    "deps:update": "vp update && node scripts/deps.mts"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.0",
@@ -24,12 +23,13 @@
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.0",
     "typescript": "^7.0.2",
-    "vite-plus": "^1.5.0",
+    "vite": "npm:@voidzero-dev/vite-plus-core@^8.3.8000",
+    "vite-plus": "^1.7.0",
     "wrangler": "^4.158.0"
   },
   "packageManager": "npm@11.12.0",
   "overrides": {
-    "vite": "npm:@voidzero-dev/vite-plus-core@^1.5.0"
+    "vite": "npm:@voidzero-dev/vite-plus-core@^8.3.8000"
   },
   "engines": {
     "node": "^24.0.0"
